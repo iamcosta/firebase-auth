@@ -1,24 +1,45 @@
-import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import './service/firebase';
+import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, UserCredential, User } from 'firebase/auth';
+import { useState } from 'react';
+
 
 function App() {
+  
+  const [user, setUser] = useState<User | null>(null);
+
+  const auth = getAuth();
+  const provider = new GoogleAuthProvider();
+
+  function login() {  
+    signInWithPopup(auth, provider).then((result: UserCredential) => {
+      setUser(result.user);      
+    }).catch((error: any) => {
+      alert(error);
+    })
+  }
+
+  function logout() {
+    signOut(auth).then(() => {
+      setUser(null);
+    }).catch(error => {
+      alert(error)
+    })
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {!user ? (
+        <>
+          <strong>Você não está logado</strong>
+          <button onClick={login}>Login com Google!</button>
+        </>
+      ): (
+        <>
+          <strong>Bem vindo, {user.displayName}!</strong>
+          <button onClick={logout}>Logout</button>
+        </>
+      )}
     </div>
   );
 }
