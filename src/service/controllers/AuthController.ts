@@ -28,11 +28,13 @@ export class AuthController {
     }
 
     logout() {
-        signOut(this.auth).then(() => {
-            this.userState[1](null);
-        }).catch(error => {
-            alert(error)
-        })
+        signOut(this.auth)
+            .then(() => {
+                this.userState[1](null);
+            })
+            .catch(error => {
+                alert(error)
+            })
     }
 
 }
