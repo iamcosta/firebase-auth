@@ -1,31 +1,22 @@
 import './App.css';
 import './service/firebase';
-import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, UserCredential, User } from 'firebase/auth';
+import { User } from 'firebase/auth';
 import { useState } from 'react';
 import { AiFillGoogleCircle, AiOutlineLogout } from 'react-icons/ai';
+import { AuthController } from './service/controllers/AuthController';
 
 function App() {
   
   const [user, setUser] = useState<User | null>(null);
 
-  const auth = getAuth();
-  const provider = new GoogleAuthProvider();
+  const authController = new AuthController([user, setUser]);
 
   function login() {  
-    signInWithPopup(auth, provider).then((result: UserCredential) => {
-      console.log(result.user)
-      setUser(result.user);      
-    }).catch((error: any) => {
-      alert(error);
-    })
+    authController.login();
   }
 
   function logout() {
-    signOut(auth).then(() => {
-      setUser(null);
-    }).catch(error => {
-      alert(error)
-    })
+    authController.logout();
   }
 
   return (
@@ -42,7 +33,7 @@ function App() {
         </>
       ): (
         <>
-          <img src={user.photoURL!}/>
+          <img src={user.photoURL!} alt={`Imagem de perfil de ${user.displayName}`}/>
           <strong>Bem vindo, {user.displayName}!</strong>
           <button className="login-button signout"  onClick={logout}>
             <div className="login-button-content">
