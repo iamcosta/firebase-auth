@@ -31,8 +31,7 @@ export class AuthController {
         signOut(this.auth)
             .then(() => {
                 this.userState[1](null);
-            })
-            .catch(error => {
+            }).catch(error => {
                 alert(error)
             })
     }
